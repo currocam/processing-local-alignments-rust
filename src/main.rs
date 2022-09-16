@@ -6,7 +6,7 @@ fn align(x:&str, y:&str, edits:&str) -> (String, String) {
     let (mut x, mut y) = (x.chars(), y.chars());
     let mut seq1: Vec<char> = Vec::new();
     let mut seq2: Vec<char> = Vec::new();
-    
+
     for edit in edits.chars(){
         match edit {
             'M' => {
@@ -26,6 +26,22 @@ fn align(x:&str, y:&str, edits:&str) -> (String, String) {
     }
     return (seq1.into_iter().collect(), seq2.into_iter().collect());
 }
+
+fn edits(x: &str, y:&str) -> String{
+    let mut edits: Vec<char> = Vec::new();
+    for position in x.chars().zip(y.chars()) {
+        let (pos1, pos2) = position;
+        if pos1 == '-' {
+            edits.push('I');
+        } else if pos2 == '-' {
+        edits.push('D');
+        } else {
+         edits.push('M');
+    }
+}
+    return edits.into_iter().collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -34,5 +50,10 @@ mod tests {
         assert_eq!(
             align("ACCACAGTCATA", "ACAGAGTACAAA", "MDMMMMMMIMMMM"),
             ("ACCACAGT-CATA".to_owned(), "A-CAGAGTACAAA".to_owned()));
+    }
+    #[test]
+    fn test_edits() {
+        assert_eq!(
+            edits("ACCACAGT-CATA", "A-CAGAGTACAAA"), "MDMMMMMMIMMMM".to_owned());
     }
 }
