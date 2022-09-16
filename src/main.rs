@@ -50,6 +50,18 @@ mod tests {
         assert_eq!(
             align("ACCACAGTCATA", "ACAGAGTACAAA", "MDMMMMMMIMMMM"),
             ("ACCACAGT-CATA".to_owned(), "A-CAGAGTACAAA".to_owned()));
+    }    
+    #[test]
+    fn test_align_in_lowercase() {
+        assert_eq!(
+            align("accaaagta", "acaaatgtcca", "MDMMIMMMMIIM"),
+            ("acca-aagt--a".to_owned(), "a-caaatgtcca".to_owned()));
+    }
+    #[test]
+    fn test_align_with_empty_sequence() {
+        assert_eq!(
+            align("a", "", "D"),
+            ("a".to_owned(), "-".to_owned()));
     }
     #[test]
     fn test_edits() {
