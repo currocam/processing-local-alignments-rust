@@ -67,5 +67,15 @@ mod tests {
     fn test_edits() {
         assert_eq!(
             edits("ACCACAGT-CATA", "A-CAGAGTACAAA"), "MDMMMMMMIMMMM".to_owned());
+    }    
+    #[test]
+    fn test_edits_in_lowercase() {
+        assert_eq!(
+            edits("acca-aagt--a", "a-caaatgtcca"), "MDMMIMMMMIIM".to_owned());
+    }
+    #[test]
+    fn test_edits_with_contiguos_gaps() {
+        assert_eq!(
+            edits("acgttcga", "aaa---aa"), "MMMDDDMM".to_owned());
     }
 }
