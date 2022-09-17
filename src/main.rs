@@ -1,5 +1,8 @@
+use regex::Regex;
+use std;
+
 fn main() {
-    println!("Hello, world!");
+    split_pairs("Hello, world!");
 }
 
 fn align(x:&str, y:&str, edits:&str) -> (String, String) {
@@ -24,7 +27,18 @@ fn align(x:&str, y:&str, edits:&str) -> (String, String) {
             _ => panic!("Unexpected edit char was found")
         }
     }
-    return (seq1.into_iter().collect(), seq2.into_iter().collect());
+    return (seq1.into_iter().collect(), seq2.into_iter().collect())
+}
+
+fn split_pairs(cigar: &str) -> Vec<(u64, char)>{
+    let mut pairs = Vec::new();
+    for cap in  Regex::new(r"(\d+)([^\d]+)").unwrap().captures_iter(cigar){
+        pairs.push(
+            (cap.get(1).unwrap().as_str().parse::<u64>().unwrap(),
+             (cap.get(2).unwrap().as_str().chars().nth(0).unwrap()))
+        )
+    }
+    return pairs
 }
 
 fn edits(x: &str, y:&str) -> String{
@@ -77,5 +91,12 @@ mod tests {
     fn test_edits_with_contiguos_gaps() {
         assert_eq!(
             edits("acgttcga", "aaa---aa"), "MMMDDDMM".to_owned());
+    }
+    #[test]
+    fn test_split_pairs() {
+        assert_eq!(
+            split_pairs("1M1D6M1I4M"),
+            vec![(1 as u64, 'M'), (1 as u64, 'D'), (6 as u64, 'M'), (1 as u64, 'I'), (4 as u64, 'M')]
+        );
     }
 }
