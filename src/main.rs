@@ -1,4 +1,4 @@
-use regex::Regex;
+use fancy_regex::Regex;
 use std;
 
 fn main() {
@@ -34,8 +34,8 @@ fn split_pairs(cigar: &str) -> Vec<(u64, char)>{
     let mut pairs = Vec::new();
     for cap in  Regex::new(r"(\d+)([^\d]+)").unwrap().captures_iter(cigar){
         pairs.push(
-            (cap.get(1).unwrap().as_str().parse::<u64>().unwrap(),
-             (cap.get(2).unwrap().as_str().chars().nth(0).unwrap()))
+            (cap.as_ref().unwrap().get(1).unwrap().as_str().parse::<u64>().unwrap(),
+             (cap.unwrap().get(2).unwrap().as_str().chars().nth(0).unwrap()))
         )
     }
     return pairs
@@ -49,7 +49,23 @@ fn cigar_to_edits(cigar: &str) -> String{
         }     
     }
     return edits.into_iter().collect();
+}
 
+fn split_blocks(x: &str) -> Vec<&str>{
+    let mut blocks = Vec::new();
+    for cap in  Regex::new(r"((.)\2*)").unwrap().captures_iter(x){
+        blocks.push(cap.unwrap().get(1).unwrap().as_str())
+    }
+    return blocks
+}
+
+fn edits_to_cigar(edits: &str) -> String{
+    let mut cigar = Vec::new();
+    for block in split_blocks(edits){
+        cigar.push(block.chars().count().to_string());
+        cigar.push(block.chars().nth(0).unwrap().to_string());
+    }
+    return cigar.into_iter().collect()
 }
 
 fn edits(x: &str, y:&str) -> String{
@@ -115,6 +131,20 @@ mod tests {
         assert_eq!(
             cigar_to_edits("1M1D6M1I4M"),
             "MDMMMMMMIMMMM"
+        );
+    }
+    #[test]
+    fn test_split_blocks() {
+        assert_eq!(
+            split_blocks("MDMMMMMMIMMMM"),
+             vec!["M", "D", "MMMMMM", "I", "MMMM"]
+        );
+    }
+    #[test]
+    fn test_edits_to_cigar() {
+        assert_eq!(
+            edits_to_cigar("MDMMMMMMIMMMM"),
+             "1M1D6M1I4M"
         );
     }
 }
