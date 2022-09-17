@@ -41,6 +41,17 @@ fn split_pairs(cigar: &str) -> Vec<(u64, char)>{
     return pairs
 }
 
+fn cigar_to_edits(cigar: &str) -> String{
+    let mut edits = Vec::new();
+    for pair in split_pairs(cigar){
+        for _ in 0..pair.0 {
+            edits.push(pair.1)
+        }     
+    }
+    return edits.into_iter().collect();
+
+}
+
 fn edits(x: &str, y:&str) -> String{
     let mut edits: Vec<char> = Vec::new();
     for position in x.chars().zip(y.chars()) {
@@ -97,6 +108,13 @@ mod tests {
         assert_eq!(
             split_pairs("1M1D6M1I4M"),
             vec![(1 as u64, 'M'), (1 as u64, 'D'), (6 as u64, 'M'), (1 as u64, 'I'), (4 as u64, 'M')]
+        );
+    }
+    #[test]
+    fn test_cigar_to_edits() {
+        assert_eq!(
+            cigar_to_edits("1M1D6M1I4M"),
+            "MDMMMMMMIMMMM"
         );
     }
 }
