@@ -21,7 +21,7 @@ pub fn align(x:&str, y:&str, edits:&str) -> (String, String) {
             _ => panic!("Unexpected edit char was found")
         }
     }
-    return (seq1.into_iter().collect(), seq2.into_iter().collect())
+    (seq1.into_iter().collect(), seq2.into_iter().collect())
 }
 
 fn split_pairs(cigar: &str) -> Vec<(u64, char)>{
@@ -29,10 +29,10 @@ fn split_pairs(cigar: &str) -> Vec<(u64, char)>{
     for cap in  Regex::new(r"(\d+)([^\d]+)").unwrap().captures_iter(cigar){
         pairs.push(
             (cap.as_ref().unwrap().get(1).unwrap().as_str().parse::<u64>().unwrap(),
-             (cap.unwrap().get(2).unwrap().as_str().chars().nth(0).unwrap()))
+             (cap.unwrap().get(2).unwrap().as_str().chars().next().unwrap()))
         )
     }
-    return pairs
+    pairs
 }
 
 pub fn cigar_to_edits(cigar: &str) -> String{
@@ -42,7 +42,7 @@ pub fn cigar_to_edits(cigar: &str) -> String{
             edits.push(pair.1)
         }     
     }
-    return edits.into_iter().collect();
+    edits.into_iter().collect()
 }
 
 fn split_blocks(x: &str) -> Vec<&str>{
@@ -50,16 +50,16 @@ fn split_blocks(x: &str) -> Vec<&str>{
     for cap in  Regex::new(r"((.)\2*)").unwrap().captures_iter(x){
         blocks.push(cap.unwrap().get(1).unwrap().as_str())
     }
-    return blocks
+    blocks
 }
 
 pub fn edits_to_cigar(edits: &str) -> String{
     let mut cigar = Vec::new();
     for block in split_blocks(edits){
         cigar.push(block.chars().count().to_string());
-        cigar.push(block.chars().nth(0).unwrap().to_string());
+        cigar.push(block.chars().next().unwrap().to_string());
     }
-    return cigar.into_iter().collect()
+    cigar.into_iter().collect()
 }
 
 pub fn edits(x: &str, y:&str) -> String{
@@ -74,7 +74,7 @@ pub fn edits(x: &str, y:&str) -> String{
          edits.push('M');
     }
 }
-    return edits.into_iter().collect()
+    edits.into_iter().collect()
 }
 
 #[cfg(test)]
