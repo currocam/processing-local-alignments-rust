@@ -1,2 +1,4 @@
 # processing-local-alignments-rust
-Processing local alignments
+Rust implementation for [processing-local-alignments exercise](https://github.com/birc-ctib-2022/processing-local-alignments-curro-s).
+
+
