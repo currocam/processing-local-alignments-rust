@@ -43,6 +43,18 @@ jobs:
         with:
           command: test
 
+      - name: Checking the application with stdin and stdout
+        run: |
+          if ! cmp <(cargo run from_cig < data/cigs.in) data/cigs.out; then
+            echo "Incorrect output for cargo run from_cig < data/cigs.in"
+            diff <(cargo run from_cig < data/cigs.in) data/cigs.out
+          fi
+          if ! cmp <(cargo run to_cig < data/alignments.in) data/alignments.out; then
+            echo "Incorrect output for cargo run to_cig < data/alignments.in"
+            diff <(cargo run to_cig < data/alignments.in) data/alignments.out
+          fi
+        shell: bash
+
   lints:
     name: Lints
     runs-on: ubuntu-latest
