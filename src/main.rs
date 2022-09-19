@@ -37,7 +37,7 @@ fn main() ->io::Result<()>{
                      splits.next().unwrap(),
                      &processing_local_alignments::cigar_to_edits(splits.next().unwrap())
                 );
-                println!("{}\n{}", seq1, seq2);
+                println!("{}\n{}\n", seq1, seq2);
                 io::stdout().flush().unwrap();
 
             }
