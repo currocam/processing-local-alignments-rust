@@ -117,7 +117,7 @@ mod tests {
     fn test_split_pairs() {
         assert_eq!(
             split_pairs("1M1D6M1I4M"),
-            vec![(1 as u64, 'M'), (1 as u64, 'D'), (6 as u64, 'M'), (1 as u64, 'I'), (4 as u64, 'M')]
+            vec![(1_u64, 'M'), (1_u64, 'D'), (6_u64, 'M'), (1_u64, 'I'), (4_u64, 'M')]
         );
     }
     #[test]

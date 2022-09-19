@@ -1,4 +1,4 @@
-use processing_local_alignments;
+
 use std::io;
 use std::io::prelude::*;
 use clap::Parser;
@@ -23,7 +23,7 @@ fn main() ->io::Result<()>{
                 let unaligned2 = &seq2.chars().filter(|x| *x != '-').collect::<String>();
                 print!("{}\t", unaligned2);
                 println!("{}", processing_local_alignments::edits_to_cigar(
-                    &processing_local_alignments::edits(&seq1, &seq2)));
+                    &processing_local_alignments::edits(&seq1, seq2)));
                 lines.next();
             }              
                 io::stdout().flush().unwrap();
@@ -31,7 +31,7 @@ fn main() ->io::Result<()>{
         "from_cig" => {
             for line in stdin.lock().lines() {
                 let line = line.unwrap();
-                let mut splits = line.split("\t");
+                let mut splits = line.split('\t');
                 let (seq1, seq2) = processing_local_alignments::align(
                      splits.next().unwrap(),
                      splits.next().unwrap(),
